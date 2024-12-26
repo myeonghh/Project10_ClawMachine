@@ -15,21 +15,13 @@ using System.Windows.Shapes;
 namespace ProjectClawMachine.View
 {
     /// <summary>
-    /// SignUpVIew.xaml에 대한 상호 작용 논리
+    /// MainMenuView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class SignUpView : UserControl
+    public partial class MainMenuView : UserControl
     {
-        public SignUpView()
+        public MainMenuView()
         {
             InitializeComponent();
-        }
-
-        private void OnPasswordChanged(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (DataContext is ViewModel.SignUpViewModel viewModel)
-            {
-                viewModel.SignUpData.Password = (sender as PasswordBox)?.Password;
-            }
         }
     }
 }

@@ -12,8 +12,6 @@ namespace ProjectClawMachine.Helper
 
         private TcpClient client;
         private NetworkStream stream;
-        private string serverIp;
-        private int serverPort;
 
         public event Func<string, byte[], Task> OnDataReceived;
 
@@ -25,27 +23,20 @@ namespace ProjectClawMachine.Helper
             {
                 lock (_lock)
                 {
-                    if (_instance == null)
-                    {
-                        _instance = new TcpClientHelper();
-                    }
-                    return _instance;
+                    return _instance ??= new TcpClientHelper();
                 }
             }
         }
 
         public async Task<bool> Connect(string serverIp, int serverPort)
         {
-            this.serverIp = serverIp;
-            this.serverPort = serverPort;
-
             try
             {
                 client = new TcpClient();
                 await client.ConnectAsync(serverIp, serverPort);
                 stream = client.GetStream();
                 Console.WriteLine($"서버에 연결되었습니다: {serverIp}:{serverPort}");
-                _ = ReceiveData(); // 데이터 수신 비동기로 실행
+                _ = ReceiveData();
                 return true;
             }
             catch (Exception ex)
@@ -77,6 +68,7 @@ namespace ProjectClawMachine.Helper
 
                     byte[] bodyBuffer = new byte[dataLength];
                     int totalBytesRead = 0;
+
                     while (totalBytesRead < dataLength)
                     {
                         int bytesRead = await stream.ReadAsync(bodyBuffer, totalBytesRead, dataLength - totalBytesRead);
@@ -100,15 +92,13 @@ namespace ProjectClawMachine.Helper
         {
             try
             {
-                string body = string.IsNullOrEmpty(msg) ? "" : msg;
-                byte[] bodyBytes = Encoding.UTF8.GetBytes(body);
-
-                string header = $"{actType}/{senderId}/{bodyBytes.Length}";
+                string header = $"{actType}/{senderId}/{msg.Length}";
                 byte[] headerBytes = Encoding.UTF8.GetBytes(header.PadRight(128, '\0'));
+                byte[] bodyBytes = Encoding.UTF8.GetBytes(msg);
 
                 byte[] dataToSend = new byte[headerBytes.Length + bodyBytes.Length];
-                Array.Copy(headerBytes, 0, dataToSend, 0, headerBytes.Length);
-                Array.Copy(bodyBytes, 0, dataToSend, headerBytes.Length, bodyBytes.Length);
+                Buffer.BlockCopy(headerBytes, 0, dataToSend, 0, headerBytes.Length);
+                Buffer.BlockCopy(bodyBytes, 0, dataToSend, headerBytes.Length, bodyBytes.Length);
 
                 await stream.WriteAsync(dataToSend, 0, dataToSend.Length);
                 Console.WriteLine("데이터 전송 완료");

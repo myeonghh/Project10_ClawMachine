@@ -1,29 +1,17 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ProjectClawMachine.Helper;
+﻿using ProjectClawMachine.Helper;
 using ProjectClawMachine.View;
 using ProjectClawMachine.ViewModel;
+using System.Windows;
 
 namespace ProjectClawMachine
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
             InitializeTcpClient();
-            LoadLoginView();
+            LoadLoginView(); // 초기 화면을 로그인 페이지로 설정
         }
 
         private async void InitializeTcpClient()
@@ -45,23 +33,33 @@ namespace ProjectClawMachine
         }
 
         // 로그인 페이지 로드
-        private void LoadLoginView()
+        public void LoadLoginView()
         {
             var loginView = new LoginView
             {
-                DataContext = new LoginViewModel() // LoginView에 LoginViewModel 바인딩
+                DataContext = new LoginViewModel(this) // MainWindow 참조 전달
             };
             MainContent.Content = loginView;
         }
 
         // 회원가입 페이지 로드
-        private void LoadSignUpView()
+        public void LoadSignUpView()
         {
             var signUpView = new SignUpVIew
             {
-                DataContext = new SignUpViewModel() // SignUpView에 SignUpViewModel 바인딩
+                DataContext = new SignUpViewModel(this) // MainWindow 참조 전달
             };
             MainContent.Content = signUpView;
+        }
+
+        // 메인 메뉴 페이지 로드
+        public void LoadMainMenuView()
+        {
+            var mainMenuView = new MainMenuView
+            {
+                DataContext = new MainMenuViewModel(this) // MainWindow 참조 전달
+            };
+            MainContent.Content = mainMenuView;
         }
     }
 }

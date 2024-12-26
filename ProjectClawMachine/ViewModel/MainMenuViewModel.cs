@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace ProjectClawMachine.ViewModel
 {
-    public class SignUpViewModel : ViewModelBase
+    public class MainMenuViewModel : ViewModelBase
     {
         private enum ACT { Login, SignUp, Streaming, ReceiveCheck };
 
@@ -18,7 +18,7 @@ namespace ProjectClawMachine.ViewModel
 
         public ICommand GoToLoginCommand { get; }
 
-        public SignUpViewModel(MainWindow mainWindow)
+        public MainMenuViewModel(MainWindow mainWindow)
         {
             _mainWindow = mainWindow; // MainWindow 참조 저장
             GoToLoginCommand = new RelayCommand(_ => _mainWindow.LoadLoginView()); // 로그인 페이지 이동
@@ -29,11 +29,11 @@ namespace ProjectClawMachine.ViewModel
             string[] headerParts = header.Split('/');
             ACT actType = (ACT)int.Parse(headerParts[0]);
 
-            if (actType == ACT.SignUp)
-            {
-                string message = Encoding.UTF8.GetString(bodyBuffer);
-                
-            }
+            //if (actType == ACT.SignUp)
+            //{
+            //    string message = Encoding.UTF8.GetString(bodyBuffer);
+
+            //}
 
             await Task.CompletedTask;
         }

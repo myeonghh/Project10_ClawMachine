@@ -1,7 +1,6 @@
 ﻿using ProjectClawMachine.Helper;
 using ProjectClawMachine.ViewModel.Command;
 using System;
-using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,9 +8,11 @@ using System.Windows.Input;
 
 namespace ProjectClawMachine.ViewModel
 {
-    public class LoginViewModel : INotifyPropertyChanged
+    public class LoginViewModel : ViewModelBase
     {
         private enum ACT { Login, SignUp, Streaming, ReceiveCheck };
+
+        private readonly MainWindow _mainWindow; // MainWindow 참조
 
         private string _username;
         private string _password;
@@ -36,19 +37,19 @@ namespace ProjectClawMachine.ViewModel
             }
         }
 
-        // 로그인 버튼 Command
         public ICommand LoginCommand { get; }
+        public ICommand GoToSignUpCommand { get; }
 
-        public LoginViewModel()
+        public LoginViewModel(MainWindow mainWindow)
         {
-            // 항상 실행 가능한 Command로 수정
+            _mainWindow = mainWindow; // MainWindow 참조 저장
             LoginCommand = new RelayCommand(async _ => await Login());
+            GoToSignUpCommand = new RelayCommand(_ => _mainWindow.LoadSignUpView()); // 회원가입 페이지 이동
         }
 
-        // 로그인 처리
         private async Task Login()
         {
-            if (!CanLogin())
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
                 MessageBox.Show("아이디와 비밀번호를 모두 입력하세요.", "로그인 오류", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -56,8 +57,7 @@ namespace ProjectClawMachine.ViewModel
 
             try
             {
-                // 서버로 로그인 데이터 전송
-                await TcpClientHelper.Instance.SendData(actType: (int)ACT.Login, senderId: Username, msg: Password);
+                await TcpClientHelper.Instance.SendData((int)ACT.Login, Username, Password);
                 Console.WriteLine("로그인 요청 전송 완료");
             }
             catch (Exception ex)
@@ -66,51 +66,26 @@ namespace ProjectClawMachine.ViewModel
             }
         }
 
-        // 입력 값 검증
-        private bool CanLogin()
+        protected override async Task HandleServerData(string header, byte[] bodyBuffer)
         {
-            return !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password);
-        }
-
-        // INotifyPropertyChanged 구현
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private async Task HandleServerData(string header, byte[] bodyBuffer)
-        {
-            //서버 응답 처리(필요 시 구현)
-            // 예시: actType 확인 및 결과 처리
             string[] headerParts = header.Split('/');
             ACT actType = (ACT)int.Parse(headerParts[0]);
 
-            switch (actType)
+            if (actType == ACT.Login)
             {
-                case ACT.Login:
-                    string message = Encoding.UTF8.GetString(bodyBuffer);
-
-                    if (message == "LoginSuccess")
-                    {
-
-                    }
-                    else if (message == "LoginFailed")
-                    {
-                        MessageBox.Show("아이디 혹은 비밀번호가 맞지 않습니다.", "로그인 오류", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                    break;
-                case ACT.SignUp:
-                    break;
-                case ACT.Streaming:
-                    break;
-                case ACT.ReceiveCheck:
-                    break;
-                default:
-                    break;
+                string message = Encoding.UTF8.GetString(bodyBuffer);
+                if (message == "LoginSuccess")
+                {
+                    MessageBox.Show("로그인 성공!", "로그인", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _mainWindow.LoadMainMenuView(); // 메인 메뉴로 이동
+                }
+                else if (message == "LoginFailed")
+                {
+                    MessageBox.Show("아이디 또는 비밀번호가 맞지 않습니다.", "로그인 오류", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
 
+            await Task.CompletedTask;
         }
     }
 }
