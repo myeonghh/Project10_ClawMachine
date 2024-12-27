@@ -30,26 +30,30 @@ namespace ClawMachineSever
             public TcpClient UserSocket { get; set; }
             public TcpClient MachineSocket { get; set; }
             public string UserId { get; set; }
-            public int MachineNum { get; set; }
+            public string MachineId { get; set; }
 
-            public User(TcpClient userSocket, TcpClient machineSocket, string userId, int machineNum)
+            public User(TcpClient userSocket, TcpClient machineSocket, string userId)
             {
                 this.UserSocket = userSocket;
                 this.MachineSocket = machineSocket;
                 this.UserId = userId;
-                this.MachineNum = machineNum;
+                this.MachineId = "";
             }
         }
 
         private class Machine
         {
             public TcpClient MachineSocket { get; set; }
-            public int MachineNum { get; set; }
+            public string MachineId { get; set; }
+            public string Category { get; set; }
+            public bool IsUse {  get; set; }
 
-            public Machine(TcpClient machineSocket, int machineNum)
+            public Machine(TcpClient machineSocket, string machineId, string category)
             {
                 this.MachineSocket = machineSocket;
-                this.MachineNum = machineNum;
+                this.MachineId = machineId;
+                this.Category = category;
+                this.IsUse = false;
             }
         }
 
@@ -62,7 +66,7 @@ namespace ClawMachineSever
         private DatabaseManager dbManager = new DatabaseManager();
         private int cnum = 1;
 
-        private enum ACT { Login, SignUp, Streaming, ReceiveCheck };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
 
         // 서버 시작
         public async Task StartServer(string ip, int port)
@@ -152,7 +156,7 @@ namespace ClawMachineSever
                         await SendMessage(clientSocket, (int)ACT.ReceiveCheck, "OK");
                         foreach (User client in userList)
                         {
-                            if (client.MachineNum == int.Parse(senderId))
+                            if (client.MachineId == senderId)
                             {
                                 await SendMessage(client.UserSocket, (int)ACT.Streaming, "response", senderId, dataBuffer);
                                 break;
@@ -189,6 +193,8 @@ namespace ClawMachineSever
         // 서버 작업 처리
         private async Task TextServerOperate(TcpClient clientSocket, ACT actType, string senderId, string msg)
         {
+            string machineId;
+
             switch (actType)
             {
                 case ACT.Login:
@@ -198,8 +204,120 @@ namespace ClawMachineSever
                 case ACT.SignUp:
                     await SignUpControl(clientSocket, senderId, msg);
                     break;
+                case ACT.MachineConnect:
+                    machineId = senderId;
+                    string category = msg;
+                    machineList.Add(new Machine(clientSocket, machineId, category));
+                    Console.WriteLine("뽑기 기계 리스트에 기계 추가");
+                    break;
+                case ACT.MachineList:
+                    await SendMachineList(clientSocket);
+                    break;
+                case ACT.MachineChoice:
+                    machineId = msg;
+                    await MachineChoiceControl(clientSocket, senderId, machineId);
+                    break;
+                case ACT.MachineControl:
+                    string control = msg;
+                    foreach (var client in userList)
+                    {
+                        if (client.UserId == senderId)
+                        {
+                            await SendMessage(client.MachineSocket, (int)ACT.MachineControl, control);
+                            break;
+                        }
+                    }
+                    break;
+                case ACT.GameOut:
+                    foreach (var client in userList)
+                    {
+                        if (client.UserId == senderId)
+                        {
+                            await SendMessage(client.MachineSocket, (int)ACT.GameOut);
+                            foreach (var machine in machineList)
+                            {
+                                if (machine.MachineId == client.MachineId)
+                                {
+                                    machine.IsUse = false;
+                                    break;
+                                }
+                            }
+                            
+                            break;
+                        }
+                    }
+                    break;
                 default:
                     break;
+            }
+        }
+
+        private async Task SendMachineList(TcpClient clientSocket)
+        {
+            try
+            {
+
+                string totalMachineInfo = "";
+
+                foreach (var machine in machineList)
+                {
+                    // 각 기계의 정보를 "MachineId,Category,상태" 형식으로 작성
+                    string machineInfo = $"{machine.MachineId},{machine.Category},{(machine.IsUse ? "사용중" : "대기중")}";
+                    totalMachineInfo += machineInfo + "/"; // 정보를 "/"로 구분하여 추가
+                }
+
+                // 마지막 "/" 제거
+                if (totalMachineInfo.EndsWith("/"))
+                {
+                    totalMachineInfo = totalMachineInfo.Substring(0, totalMachineInfo.Length - 1);
+                }
+
+                // 클라이언트로 전송
+                await SendMessage(clientSocket, (int)ACT.MachineList, totalMachineInfo);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"기계 목록 전송 중 오류 발생: {ex.Message}");
+            }
+        }
+
+
+        private async Task MachineChoiceControl(TcpClient clientSocket, string id, string machineId)
+        {
+            bool check = false;
+
+            foreach (var machine in machineList)
+            {
+                if (machine.MachineId == machineId)
+                {
+                    if (machine.IsUse == false)
+                    {
+                        foreach (var client in userList)
+                        {
+                            if (client.UserId == id)
+                            {
+                                client.MachineSocket = machine.MachineSocket;
+                                client.MachineId = machineId;
+                            }
+                        }
+
+                        await SendMessage(clientSocket, (int)ACT.MachineChoice, "Complete");
+                        await SendMessage(machine.MachineSocket, (int)ACT.Streaming, "Request");
+                        machine.IsUse = true;
+                    }
+                    else
+                    {
+                        await SendMessage(clientSocket, (int)ACT.MachineChoice, "MachineInUse");
+                    }
+
+                    check = true;
+                    break;
+                }
+            }
+
+            if (!check)
+            {
+                await SendMessage(clientSocket, (int)ACT.MachineChoice, "MachineNone");
             }
         }
 
@@ -288,7 +406,7 @@ namespace ClawMachineSever
                     {
                         if (reader.HasRows) // 데이터가 있으면 로그인 성공
                         {
-                            userList.Add(new User(clientSocket, null, id, 0));
+                            userList.Add(new User(clientSocket, null, id));
                             Console.WriteLine("유저 리스트에 유저 추가");
                     
                             // 로그인 성공 메시지 전송

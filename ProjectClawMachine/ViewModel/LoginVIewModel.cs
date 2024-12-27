@@ -10,7 +10,7 @@ namespace ProjectClawMachine.ViewModel
 {
     public class LoginViewModel : ViewModelBase
     {
-        private enum ACT { Login, SignUp, Streaming, ReceiveCheck };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
 
         private readonly MainWindow _mainWindow; // MainWindow 참조
 
@@ -77,6 +77,7 @@ namespace ProjectClawMachine.ViewModel
                 if (message == "LoginSuccess")
                 {
                     MessageBox.Show("로그인 성공!", "로그인", MessageBoxButton.OK, MessageBoxImage.Information);
+                    await TcpClientHelper.Instance.SendData((int)ACT.MachineList, Username);
                     _mainWindow.LoadMainMenuView(); // 메인 메뉴로 이동
                 }
                 else if (message == "LoginFailed")

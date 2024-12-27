@@ -12,7 +12,7 @@ namespace ProjectClawMachine.ViewModel
 {
     public class MainMenuViewModel : ViewModelBase
     {
-        private enum ACT { Login, SignUp, Streaming, ReceiveCheck };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
 
         private readonly MainWindow _mainWindow; // MainWindow 참조
 
@@ -29,7 +29,29 @@ namespace ProjectClawMachine.ViewModel
             string[] headerParts = header.Split('/');
             ACT actType = (ACT)int.Parse(headerParts[0]);
 
+            if (actType == ACT.MachineList)
+            {
 
+            }
+            else if (actType == ACT.MachineChoice)
+            {
+                string message = Encoding.UTF8.GetString(bodyBuffer);
+
+                switch (message)
+                {
+                    case "Complete":                  
+                        _mainWindow.LoadGamePlayView(); // 게임 플레이 페이지로 이동
+                        break;
+                    case "MachineInUse":
+                        MessageBox.Show("이미 사용중인 기계입니다.", "게임실행 실패", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        break;
+                    case "MachineNone":
+                        MessageBox.Show("연결되지 않은 기계입니다.", "게임실행 실패", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             await Task.CompletedTask;
         }

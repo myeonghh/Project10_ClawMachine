@@ -10,7 +10,7 @@ namespace ProjectClawMachine.ViewModel
 {
     public class SignUpViewModel : ViewModelBase
     {
-        private enum ACT { Login, SignUp, Streaming, ReceiveCheck };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
 
         private readonly MainWindow _mainWindow;
 

@@ -61,5 +61,15 @@ namespace ProjectClawMachine
             };
             MainContent.Content = mainMenuView;
         }
+
+        // 게임 시작 페이지 로드
+        public void LoadGamePlayView()
+        {
+            var gamePlayView = new GamePlayView
+            {
+                DataContext = new GamePlayViewModel(this) // MainWindow 참조 전달
+            };
+            MainContent.Content = gamePlayView;
+        }
     }
 }
