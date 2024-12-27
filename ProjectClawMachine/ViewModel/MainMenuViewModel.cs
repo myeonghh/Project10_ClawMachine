@@ -29,11 +29,7 @@ namespace ProjectClawMachine.ViewModel
             string[] headerParts = header.Split('/');
             ACT actType = (ACT)int.Parse(headerParts[0]);
 
-            //if (actType == ACT.SignUp)
-            //{
-            //    string message = Encoding.UTF8.GetString(bodyBuffer);
 
-            //}
 
             await Task.CompletedTask;
         }

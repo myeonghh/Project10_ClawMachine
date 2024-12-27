@@ -205,9 +205,10 @@ namespace ClawMachineSever
 
         private async Task SignUpControl(TcpClient clientSocket, string id, string msg)
         {
-            string[] msgParts = msg.Split(",");
+            string[] msgParts = msg.Split("/");
             string password = msgParts[0];
             string phoneNum = msgParts[1];
+            string address = msgParts[2];
 
             string query;
             int result;
@@ -215,7 +216,7 @@ namespace ClawMachineSever
 
             try
             {
-                query = "SELECT COUNT(*) FROM user WHERE u_id = @id";
+                query = "SELECT COUNT(*) FROM user WHERE id = @id";
                 // 명령 객체 생성 및 파라미터 바인딩
                 command = dbManager.CreateCommand(query);
                 command.Parameters.AddWithValue("@id", id);
@@ -231,7 +232,7 @@ namespace ClawMachineSever
                     return;
                 }
 
-                query = "SELECT COUNT(*) FROM user WHERE u_phonenum = @phonenum";
+                query = "SELECT COUNT(*) FROM user WHERE phonenum = @phonenum";
                 // 명령 객체 생성 및 파라미터 바인딩
                 command = dbManager.CreateCommand(query);
                 command.Parameters.AddWithValue("@phonenum", phoneNum);
@@ -247,14 +248,14 @@ namespace ClawMachineSever
                     return;
                 }
 
-                query = "INSERT INTO user (u_id, u_pw, u_phonenum, u_cnum) VALUES (@id, @pw, @phonenum, @cnum);";
+                query = "INSERT INTO user (id, password, phonenum, address) VALUES (@id, @pw, @phonenum, @address);";
                 command = dbManager.CreateCommand(query);
 
                 // 파라미터 추가
                 command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@pw", password);
                 command.Parameters.AddWithValue("@phonenum", phoneNum);
-                command.Parameters.AddWithValue("@cnum", cnum);
+                command.Parameters.AddWithValue("@address", address);
 
                 // 실행
                 int rowsAffected = command.ExecuteNonQuery();
@@ -264,7 +265,8 @@ namespace ClawMachineSever
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"회원가입 처리 중 오류 발생: {ex.Message}");
+                await SendMessage(clientSocket, (int)ACT.SignUp, "SignUpFailed");
+                Console.WriteLine($"회원가입 처리 중 오류 발생: {ex.Message}");              
             }
 
         }

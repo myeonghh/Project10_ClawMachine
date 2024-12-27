@@ -45,7 +45,7 @@ namespace ProjectClawMachine
         // 회원가입 페이지 로드
         public void LoadSignUpView()
         {
-            var signUpView = new SignUpVIew
+            var signUpView = new SignUpView
             {
                 DataContext = new SignUpViewModel(this) // MainWindow 참조 전달
             };

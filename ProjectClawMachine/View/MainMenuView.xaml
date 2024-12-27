@@ -7,6 +7,43 @@
         mc:Ignorable="d"
         d:DesignHeight="700" d:DesignWidth="800">
     <Grid Background="White">
-        
+        <!-- 최우상단 로그아웃 버튼 -->
+        <Button Content="로그아웃"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,20,20,0"
+                Width="100"
+                Height="30"
+                Command="{Binding LogoutCommand}" />
+
+        <!-- 중앙 ListView -->
+        <ListView x:Name="MachineListView"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Width="600"
+                  Height="400"
+                  ItemsSource="{Binding MachineList}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="기계 번호" DisplayMemberBinding="{Binding Number}" Width="100" />
+                    <GridViewColumn Header="품목" DisplayMemberBinding="{Binding Item}" Width="300" />
+                    <GridViewColumn Header="상태" DisplayMemberBinding="{Binding Status}" Width="200" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- 아래 "선택하기"와 "로그보기" 버튼 -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="0,0,0,50">
+            <Button Content="선택하기"
+                    Width="100"
+                    Height="30"
+                    Margin="10,0"
+                    Command="{Binding SelectCommand}" />
+            <Button Content="로그보기"
+                    Width="100"
+                    Height="30"
+                    Margin="10,0"
+                    Command="{Binding LogCommand}" />
+        </StackPanel>
     </Grid>
 </UserControl>
