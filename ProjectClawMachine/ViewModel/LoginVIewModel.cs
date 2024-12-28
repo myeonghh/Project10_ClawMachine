@@ -76,7 +76,10 @@ namespace ProjectClawMachine.ViewModel
                 string message = Encoding.UTF8.GetString(bodyBuffer);
                 if (message == "LoginSuccess")
                 {
-                    MessageBox.Show("로그인 성공!", "로그인", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // 로그인 성공한 사용자 ID를 저장
+                    UserSession.CurrentUserId = Username;
+
+                    // 서버에 뽑기 기계 리스트 요청
                     await TcpClientHelper.Instance.SendData((int)ACT.MachineList, Username);
                     _mainWindow.LoadMainMenuView(); // 메인 메뉴로 이동
                 }

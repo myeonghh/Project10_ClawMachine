@@ -158,7 +158,7 @@ namespace ClawMachineSever
                         {
                             if (client.MachineId == senderId)
                             {
-                                await SendMessage(client.UserSocket, (int)ACT.Streaming, "response", senderId, dataBuffer);
+                                await SendMessage(client.UserSocket, (int)ACT.Streaming, "", senderId, dataBuffer);
                                 break;
                             }
                         }
@@ -241,8 +241,7 @@ namespace ClawMachineSever
                                     machine.IsUse = false;
                                     break;
                                 }
-                            }
-                            
+                            }                           
                             break;
                         }
                     }
