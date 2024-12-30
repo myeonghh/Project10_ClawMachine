@@ -8,17 +8,17 @@ using ProjectClawMachine.Helper;
 using System.Windows.Media;
 using System.IO;
 using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace ProjectClawMachine.ViewModel
 {
     public class GamePlayViewModel : ViewModelBase
     {
-        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut, StreamingRequest, Logout };
 
         private readonly MainWindow _mainWindow;
 
         private ImageSource _cameraView;
-
         public ImageSource CameraView
         {
             get => _cameraView;
@@ -33,6 +33,8 @@ namespace ProjectClawMachine.ViewModel
         public ICommand MoveDownCommand { get; }
         public ICommand MoveLeftCommand { get; }
         public ICommand MoveRightCommand { get; }
+        public ICommand MoveFrontCommand { get; }
+        public ICommand MoveBehindCommand { get; }
         public ICommand GrabCommand { get; }
         public ICommand ExitGameCommand { get; }
 
@@ -40,34 +42,66 @@ namespace ProjectClawMachine.ViewModel
         {
             _mainWindow = mainWindow;
 
-            // 버튼 클릭 명령 초기화 (비동기 명령 사용)
             MoveUpCommand = new AsyncRelayCommand(() => SendControlCommand("Up"));
             MoveDownCommand = new AsyncRelayCommand(() => SendControlCommand("Down"));
             MoveLeftCommand = new AsyncRelayCommand(() => SendControlCommand("Left"));
             MoveRightCommand = new AsyncRelayCommand(() => SendControlCommand("Right"));
+            MoveFrontCommand = new AsyncRelayCommand(() => SendControlCommand("Front"));
+            MoveBehindCommand = new AsyncRelayCommand(() => SendControlCommand("Behind"));
             GrabCommand = new AsyncRelayCommand(() => SendControlCommand("Grab"));
             ExitGameCommand = new AsyncRelayCommand(ExitGame);
 
-            // 키보드 입력 이벤트 핸들러 추가
-            Application.Current.MainWindow.KeyDown += async (s, e) => await OnKeyDownAsync(e);
+            AttachKeyDownEvent(); // KeyDown 이벤트 핸들러 등록
+
+            
         }
 
-        // 키보드 입력 처리 (비동기)
-        private async Task OnKeyDownAsync(KeyEventArgs e)
+        // KeyDown 이벤트 핸들러 등록
+        private void AttachKeyDownEvent()
         {
+            if (!EventSession.IsKeyDownEventAttached)
+            {
+                Application.Current.MainWindow.KeyDown += OnKeyDown;
+                EventSession.IsKeyDownEventAttached = true;
+                MessageBox.Show($"키다운 이벤트 등록", "등록", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // KeyDown 이벤트 핸들러 제거
+        private void DetachKeyDownEvent()
+        {
+            if (EventSession.IsKeyDownEventAttached)
+            {
+                Application.Current.MainWindow.KeyDown -= OnKeyDown;
+                EventSession.IsKeyDownEventAttached = false;
+                MessageBox.Show($"키다운 이벤트 해제", "해제", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (PageSession.CurrentPage != "GamePlay")
+                return;
+
             switch (e.Key)
             {
                 case Key.Up:
-                    await SendControlCommand("Up");
+                    await SendControlCommand("Behind");
                     break;
                 case Key.Down:
-                    await SendControlCommand("Down");
+                    await SendControlCommand("Front");
                     break;
                 case Key.Left:
-                    await SendControlCommand("Left");
+                    await SendControlCommand("Right");
                     break;
                 case Key.Right:
-                    await SendControlCommand("Right");
+                    await SendControlCommand("Left");
+                    break;
+                case Key.W:
+                    await SendControlCommand("Up");
+                    break;
+                case Key.S:
+                    await SendControlCommand("Down");
                     break;
                 case Key.Enter:
                     await SendControlCommand("Grab");
@@ -75,15 +109,11 @@ namespace ProjectClawMachine.ViewModel
             }
         }
 
-        // 서버로 명령 전송
         private async Task SendControlCommand(string control)
         {
             try
             {
-                // 로그인한 사용자 ID 사용
                 string userId = UserSession.CurrentUserId;
-
-                // 서버로 메시지 전송
                 await TcpClientHelper.Instance.SendData((int)ACT.MachineControl, userId, control);
             }
             catch (Exception ex)
@@ -92,18 +122,13 @@ namespace ProjectClawMachine.ViewModel
             }
         }
 
-        // "그만하기" 명령 실행
         private async Task ExitGame()
         {
             try
             {
-                // 로그인한 사용자 ID 사용
+                DetachKeyDownEvent(); // KeyDown 이벤트 핸들러 제거
                 string userId = UserSession.CurrentUserId;
-
-                // 서버로 종료 요청 전송
                 await TcpClientHelper.Instance.SendData((int)ACT.GameOut, userId);
-
-                // 메인 메뉴로 돌아가기
                 _mainWindow.LoadMainMenuView();
             }
             catch (Exception ex)
@@ -119,22 +144,26 @@ namespace ProjectClawMachine.ViewModel
 
             if (actType == ACT.Streaming)
             {
-                // dataBuffer를 BitmapImage로 변환
-                using (var ms = new MemoryStream(bodyBuffer))
+                using (MemoryStream ms = new MemoryStream(bodyBuffer))
                 {
-                    var bitmap = new BitmapImage();
+                    BitmapImage bitmap = new BitmapImage();
                     bitmap.BeginInit();
                     bitmap.CacheOption = BitmapCacheOption.OnLoad;
                     bitmap.StreamSource = ms;
                     bitmap.EndInit();
-                    bitmap.Freeze(); // UI 스레드에서 안전하게 접근할 수 있도록 Freeze
+                    bitmap.Freeze();
 
-                    // CameraView 속성 업데이트
                     CameraView = bitmap;
                 }
             }
 
             await Task.CompletedTask;
+        }
+
+        // 소멸자에서 KeyDown 이벤트 핸들러 해제
+        ~GamePlayViewModel()
+        {
+            DetachKeyDownEvent();
         }
     }
 }

@@ -11,4 +11,15 @@ namespace ProjectClawMachine.Helper
         // 현재 로그인한 유저 ID
         public static string CurrentUserId { get; set; }
     }
+
+    public static class PageSession
+    {
+        // 현재 로그인한 유저 ID
+        public static string CurrentPage { get; set; }
+    }
+
+    public static class EventSession
+    {
+        public static bool IsKeyDownEventAttached { get; set; } = false;
+    }
 }

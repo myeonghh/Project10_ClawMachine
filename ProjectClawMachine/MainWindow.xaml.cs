@@ -11,7 +11,7 @@ namespace ProjectClawMachine
         {
             InitializeComponent();
             InitializeTcpClient();
-            LoadLoginView(); // 초기 화면을 로그인 페이지로 설정
+            LoadIntroView(); // 초기 화면을 로그인 페이지로 설정
         }
 
         private async void InitializeTcpClient()
@@ -32,6 +32,17 @@ namespace ProjectClawMachine
             }
         }
 
+        // 인트로 페이지 로드
+        public void LoadIntroView()
+        {
+            var introView = new IntroView
+            {
+                DataContext = new IntroViewModel(this) // MainWindow 참조 전달
+            };
+            MainContent.Content = introView;
+            PageSession.CurrentPage = "Intro";
+        }
+
         // 로그인 페이지 로드
         public void LoadLoginView()
         {
@@ -40,6 +51,7 @@ namespace ProjectClawMachine
                 DataContext = new LoginViewModel(this) // MainWindow 참조 전달
             };
             MainContent.Content = loginView;
+            PageSession.CurrentPage = "Login";
         }
 
         // 회원가입 페이지 로드
@@ -50,6 +62,7 @@ namespace ProjectClawMachine
                 DataContext = new SignUpViewModel(this) // MainWindow 참조 전달
             };
             MainContent.Content = signUpView;
+            PageSession.CurrentPage = "SignUp";
         }
 
         // 메인 메뉴 페이지 로드
@@ -60,6 +73,7 @@ namespace ProjectClawMachine
                 DataContext = new MainMenuViewModel(this) // MainWindow 참조 전달
             };
             MainContent.Content = mainMenuView;
+            PageSession.CurrentPage = "MainMenu";
         }
 
         // 게임 시작 페이지 로드
@@ -70,6 +84,7 @@ namespace ProjectClawMachine
                 DataContext = new GamePlayViewModel(this) // MainWindow 참조 전달
             };
             MainContent.Content = gamePlayView;
+            PageSession.CurrentPage = "GamePlay";
         }
     }
 }

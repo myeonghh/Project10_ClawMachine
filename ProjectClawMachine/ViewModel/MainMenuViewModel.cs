@@ -6,22 +6,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ProjectClawMachine.ViewModel
 {
     public class MainMenuViewModel : ViewModelBase
     {
-        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut, StreamingRequest, Logout };
 
         private readonly MainWindow _mainWindow; // MainWindow 참조
 
         public ICommand GoToLoginCommand { get; }
+        public ICommand LogoutCommand { get; }
+
+        public ICommand MachineChoiceCommand { get; }
 
         public MainMenuViewModel(MainWindow mainWindow)
         {
+            string userId = UserSession.CurrentUserId;
+
             _mainWindow = mainWindow; // MainWindow 참조 저장
             GoToLoginCommand = new RelayCommand(_ => _mainWindow.LoadLoginView()); // 로그인 페이지 이동
+
+            LogoutCommand = new RelayCommand(async _ => await Logout(userId)); // 로그아웃
+
+            MachineChoiceCommand = new RelayCommand(async _ => await MachineChoice(userId)); // 로그아웃
+        }
+
+        private async Task MachineChoice(string userId)
+        {
+            await TcpClientHelper.Instance.SendData((int)ACT.MachineChoice, userId, "1");
+        }
+
+        private async Task Logout(string userId)
+        {
+            await TcpClientHelper.Instance.SendData((int)ACT.Logout, userId);
+            _mainWindow.LoadLoginView(); // 로그인 페이지로 이동
         }
 
         protected override async Task HandleServerData(string header, byte[] bodyBuffer)

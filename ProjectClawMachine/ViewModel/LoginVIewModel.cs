@@ -10,7 +10,7 @@ namespace ProjectClawMachine.ViewModel
 {
     public class LoginViewModel : ViewModelBase
     {
-        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut, StreamingRequest, Logout };
 
         private readonly MainWindow _mainWindow; // MainWindow 참조
 
@@ -85,6 +85,8 @@ namespace ProjectClawMachine.ViewModel
                 }
                 else if (message == "LoginFailed")
                 {
+
+
                     MessageBox.Show("아이디 또는 비밀번호가 맞지 않습니다.", "로그인 오류", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }

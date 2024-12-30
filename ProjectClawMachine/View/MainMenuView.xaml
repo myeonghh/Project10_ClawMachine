@@ -5,45 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectClawMachine.View"
         mc:Ignorable="d"
-        d:DesignHeight="700" d:DesignWidth="800">
-    <Grid Background="White">
+        d:DesignHeight="1080" d:DesignWidth="1920">
+    <Grid>
+
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/View/Resource/mainmenu.jpg" Stretch="Fill"/>
+        </Grid.Background>
+
         <!-- 최우상단 로그아웃 버튼 -->
-        <Button Content="로그아웃"
-                HorizontalAlignment="Right"
+        <Button HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Margin="0,20,20,0"
-                Width="100"
-                Height="30"
-                Command="{Binding LogoutCommand}" />
+                Width="200"
+                Height="60"
+                Cursor="Hand"
+                Command="{Binding LogoutCommand}" >
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border BorderThickness="0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/View/Resource/logout.png" Stretch="Fill"/>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
 
-        <!-- 중앙 ListView -->
-        <ListView x:Name="MachineListView"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Width="600"
-                  Height="400"
-                  ItemsSource="{Binding MachineList}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="기계 번호" DisplayMemberBinding="{Binding Number}" Width="100" />
-                    <GridViewColumn Header="품목" DisplayMemberBinding="{Binding Item}" Width="300" />
-                    <GridViewColumn Header="상태" DisplayMemberBinding="{Binding Status}" Width="200" />
-                </GridView>
-            </ListView.View>
-        </ListView>
 
-        <!-- 아래 "선택하기"와 "로그보기" 버튼 -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="0,0,0,50">
-            <Button Content="선택하기"
-                    Width="100"
-                    Height="30"
-                    Margin="10,0"
-                    Command="{Binding SelectCommand}" />
-            <Button Content="로그보기"
-                    Width="100"
-                    Height="30"
-                    Margin="10,0"
-                    Command="{Binding LogCommand}" />
-        </StackPanel>
+        <Button x:Name="ClawMachineButton" 
+                Margin="-795,-200,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="329.8"
+                Height="329.8"
+                Command="{Binding MachineChoiceCommand}"
+                Cursor="Hand"
+                BorderThickness="0"
+                Background="Transparent">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="15" BorderThickness="0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/View/Resource/Claw Machine.jpg" Stretch="Fill"/>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
     </Grid>
 </UserControl>

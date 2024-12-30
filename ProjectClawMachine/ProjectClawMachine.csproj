@@ -9,7 +9,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="View\Resource\back.png" />
+    <None Remove="View\Resource\Claw Machine.jpg" />
+    <None Remove="View\Resource\join.jpg" />
+    <None Remove="View\Resource\joinpage.jpg" />
+    <None Remove="View\Resource\login.png" />
+    <None Remove="View\Resource\logout.png" />
+    <None Remove="View\Resource\mainmenu.jpg" />
+    <None Remove="View\Resource\play.jpg" />
+    <None Remove="View\Resource\signup.png" />
+    <None Remove="View\Resource\start.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MySql.Data" Version="9.1.0" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\Resource\back.png" />
+    <Resource Include="View\Resource\Claw Machine.jpg" />
+    <Resource Include="View\Resource\join.jpg" />
+    <Resource Include="View\Resource\joinpage.jpg" />
+    <Resource Include="View\Resource\login.png" />
+    <Resource Include="View\Resource\logout.png" />
+    <Resource Include="View\Resource\mainmenu.jpg" />
+    <Resource Include="View\Resource\play.jpg" />
+    <Resource Include="View\Resource\signup.png" />
+    <Resource Include="View\Resource\start.gif" />
   </ItemGroup>
 
 </Project>

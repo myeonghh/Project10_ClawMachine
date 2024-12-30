@@ -5,20 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectClawMachine.View"
         mc:Ignorable="d"
-        d:DesignHeight="700" d:DesignWidth="800">
-    <Grid Background="White">
+        d:DesignHeight="1080" d:DesignWidth="1920">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Resource/play.jpg" Stretch="Fill"/>
+        </Grid.Background>
         <!-- 실시간 웹캠 이미지 -->
-        <Image Source="{Binding CameraView}" Stretch="Fill" Width="400" Height="400" HorizontalAlignment="Left" Margin="20,20,0,0"/>
+        <Image Source="{Binding CameraView}" Stretch="Fill" Width="733" HorizontalAlignment="Left" Margin="609,275,0,304"/>
 
         <!-- 버튼 컨트롤 -->
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0" Orientation="Vertical">
-            <Button Content="↑" Width="60" Height="60" Margin="0,10" Command="{Binding MoveUpCommand}"/>
+            <Button Content="↑" Width="60" Height="60" Margin="0,10" Command="{Binding MoveBehindCommand}" Focusable="False"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Content="←" Width="60" Height="60" Margin="10,0" Command="{Binding MoveLeftCommand}"/>
-                <Button Content="→" Width="60" Height="60" Margin="10,0" Command="{Binding MoveRightCommand}"/>
+                <Button Content="←" Width="60" Height="60" Margin="10,0" Command="{Binding MoveRightCommand}" Focusable="False"/>
+                <Button Content="→" Width="60" Height="60" Margin="10,0" Command="{Binding MoveLeftCommand}" Focusable="False"/>
             </StackPanel>
-            <Button Content="↓" Width="60" Height="60" Margin="0,10" Command="{Binding MoveDownCommand}"/>
-            <Button Content="뽑기" Width="100" Height="50" Margin="0,20" Command="{Binding GrabCommand}"/>
+            <Button Content="↓" Width="60" Height="60" Margin="0,10" Command="{Binding MoveFrontCommand}" Focusable="False"/>
+            <Button Content="뽑기" Width="100" Height="50" Margin="0,20" Command="{Binding GrabCommand}" Focusable="False"/>
         </StackPanel>
 
         <!-- 우상단 "그만하기" 버튼 -->
@@ -28,6 +31,9 @@
                 Margin="0,20,20,0"
                 Width="100"
                 Height="30"
-                Command="{Binding ExitGameCommand}"/>
+                Command="{Binding ExitGameCommand}"
+                Focusable="False"/>
+        <Button Content="Up" Command="{Binding MoveUpCommand}" HorizontalAlignment="Left" Margin="1740,293,0,0" VerticalAlignment="Top" Height="53" Width="60" RenderTransformOrigin="0.367,0.415"/>
+        <Button Content="Down" Command="{Binding MoveDownCommand}" HorizontalAlignment="Left" Margin="1820,293,0,0" VerticalAlignment="Top" Height="53" Width="60" RenderTransformOrigin="0.367,0.415"/>
     </Grid>
 </UserControl>

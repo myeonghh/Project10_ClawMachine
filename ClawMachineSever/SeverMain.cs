@@ -66,7 +66,7 @@ namespace ClawMachineSever
         private DatabaseManager dbManager = new DatabaseManager();
         private int cnum = 1;
 
-        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut };
+        private enum ACT { Login, SignUp, MachineConnect, MachineList, MachineChoice, Streaming, ReceiveCheck, MachineControl, GameOut, StreamingRequest, Logout };
 
         // 서버 시작
         public async Task StartServer(string ip, int port)
@@ -152,8 +152,8 @@ namespace ClawMachineSever
                     if (actType == ACT.Streaming) // CCTV 이미지 데이터
                     {
                         Console.WriteLine($"이미지 수신 완료");
-                        // 5. 응답 전송 (클라이언트가 다음 이미지를 전송하도록 동기화)
-                        await SendMessage(clientSocket, (int)ACT.ReceiveCheck, "OK");
+                        //// 5. 응답 전송 (클라이언트가 다음 이미지를 전송하도록 동기화)
+                        //await SendMessage(clientSocket, (int)ACT.ReceiveCheck, "OK");
                         foreach (User client in userList)
                         {
                             if (client.MachineId == senderId)
@@ -181,6 +181,23 @@ namespace ClawMachineSever
                 lock (clientLock)
                 {
                     clients.Remove(clientSocket);
+
+                    foreach (User client in userList)
+                    {
+                        if (client.UserSocket == clientSocket)
+                        {
+                            foreach (Machine machine in machineList)
+                            {
+                                if (machine.MachineId == client.MachineId)
+                                {
+                                    machine.IsUse = false;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+
                     userList.RemoveAll(c => c.UserSocket == clientSocket);
                     machineList.RemoveAll(c => c.MachineSocket == clientSocket);
                 }               
@@ -246,6 +263,10 @@ namespace ClawMachineSever
                         }
                     }
                     break;
+                case ACT.Logout:
+                    userList.RemoveAll(c => c.UserId == senderId);
+                    Console.WriteLine($"{senderId} 유저가 로그아웃 하였습니다.");
+                    break;
                 default:
                     break;
             }
@@ -301,7 +322,7 @@ namespace ClawMachineSever
                         }
 
                         await SendMessage(clientSocket, (int)ACT.MachineChoice, "Complete");
-                        await SendMessage(machine.MachineSocket, (int)ACT.Streaming, "Request");
+                        await SendMessage(machine.MachineSocket, (int)ACT.StreamingRequest, "Request");
                         machine.IsUse = true;
                     }
                     else

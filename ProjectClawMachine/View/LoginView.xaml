@@ -4,42 +4,80 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignHeight="700" d:DesignWidth="800">
-    <Grid Background="White">
-        <!-- 프로그램 타이틀 -->
-        <TextBlock Text="인형뽑기"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   FontSize="30"
-                   FontWeight="Bold"
-                   Margin="0,20,0,0" />
+             d:DesignHeight="1080" d:DesignWidth="1920">
 
-        <!-- 아이디와 비밀번호 입력 폼 -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
-            <!-- 아이디 입력 -->
-            <TextBlock Text="아이디" FontSize="16" Margin="0,10,0,5" />
-            <TextBox x:Name="UsernameTextBox" Height="30" FontSize="14" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Resource/join.jpg" Stretch="Fill"/>
+        </Grid.Background>
 
-            <!-- 비밀번호 입력 -->
-            <TextBlock Text="비밀번호" FontSize="16" Margin="0,20,0,5" />
-            <PasswordBox x:Name="PasswordBox" Height="30" FontSize="14" PasswordChanged="OnPasswordChanged" />
+        <!-- Grid 구조 정의 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <!-- 입력 필드 영역 -->
+            <RowDefinition Height="2*"/>
+            <!-- 버튼 영역 -->
+            <RowDefinition Height="2*"/>
+            <!-- 하단 여백 -->
+        </Grid.RowDefinitions>
 
-            <!-- 로그인 버튼 -->
-            <Button Content="로그인"
-                    Width="100"
-                    Height="40"
-                    Margin="0,20,0,0"
-                    HorizontalAlignment="Center"
-                    Command="{Binding LoginCommand}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <!-- 좌측 여백 -->
+            <ColumnDefinition Width="3*"/>
+            <!-- 콘텐츠 영역 -->
+            <ColumnDefinition Width="1*"/>
+            <!-- 우측 여백 -->
+        </Grid.ColumnDefinitions>
+
+
+        <!-- 입력 필드 -->
+        <StackPanel Grid.Row="1" Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Width="900">
+            <TextBox x:Name="UsernameTextBox"
+                 Height="60"
+                 FontSize="14"
+                 Margin="0,70,100,70"
+                 Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                 />
+
+            <PasswordBox x:Name="PasswordBox"
+                     Height="60"
+                     FontSize="14"
+                         Margin="0,0,100,0"
+                     PasswordChanged="OnPasswordChanged"/>
         </StackPanel>
 
-        <!-- 회원가입 버튼 -->
-        <Button Content="회원가입"
+        <!-- 버튼 -->
+        <StackPanel Grid.Row="2" Grid.Column="1"
+                Orientation="Horizontal"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Margin="0,0,0,30"
-                Width="120"
-                Height="40"
-                Command="{Binding GoToSignUpCommand}" />
+                VerticalAlignment="Center">
+            <Button Width="324"
+                Height="72.1"
+                BorderThickness="0"
+                Cursor="Hand"
+                Margin="30,0,70,0"
+                Command="{Binding LoginCommand}">
+                <Button.Background>
+                    <ImageBrush ImageSource="pack://application:,,,/View/Resource/login.png" Stretch="Fill"/>
+                </Button.Background>
+            </Button>
+
+            <Button Width="324"
+                Height="72.1"
+                BorderThickness="0"
+                Cursor="Hand"
+                Command="{Binding GoToSignUpCommand}">
+                <Button.Background>
+                    <ImageBrush ImageSource="pack://application:,,,/View/Resource/signup.png" Stretch="Fill"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
     </Grid>
+
+
+
 </UserControl>
