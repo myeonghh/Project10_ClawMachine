@@ -52,8 +52,7 @@ namespace ProjectClawMachine.ViewModel
             ExitGameCommand = new AsyncRelayCommand(ExitGame);
 
             AttachKeyDownEvent(); // KeyDown 이벤트 핸들러 등록
-
-            
+                                 
         }
 
         // KeyDown 이벤트 핸들러 등록
@@ -128,7 +127,11 @@ namespace ProjectClawMachine.ViewModel
             {
                 DetachKeyDownEvent(); // KeyDown 이벤트 핸들러 제거
                 string userId = UserSession.CurrentUserId;
+
+                // 서버로 종료 요청 전송
                 await TcpClientHelper.Instance.SendData((int)ACT.GameOut, userId);
+
+                // 메인 메뉴로 돌아가기
                 _mainWindow.LoadMainMenuView();
             }
             catch (Exception ex)
@@ -144,6 +147,7 @@ namespace ProjectClawMachine.ViewModel
 
             if (actType == ACT.Streaming)
             {
+                // dataBuffer를 BitmapImage로 변환
                 using (MemoryStream ms = new MemoryStream(bodyBuffer))
                 {
                     BitmapImage bitmap = new BitmapImage();

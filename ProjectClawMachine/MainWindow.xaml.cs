@@ -86,5 +86,29 @@ namespace ProjectClawMachine
             MainContent.Content = gamePlayView;
             PageSession.CurrentPage = "GamePlay";
         }
+
+        protected override void OnKeyDown(System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                if (this.WindowState == System.Windows.WindowState.Maximized && this.WindowStyle == System.Windows.WindowStyle.None)
+                {
+                    // 전체화면 → 일반화면
+                    this.WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
+                    this.WindowState = System.Windows.WindowState.Normal;
+                    this.Topmost = false;
+                }
+                else
+                {
+                    // 일반화면 → 전체화면
+                    this.WindowStyle = System.Windows.WindowStyle.None;
+                    this.WindowState = System.Windows.WindowState.Maximized;
+                    this.ResizeMode = System.Windows.ResizeMode.NoResize;
+                    this.Topmost = true;
+                }
+            }
+
+            base.OnKeyDown(e);
+        }
     }
 }

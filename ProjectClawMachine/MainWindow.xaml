@@ -4,7 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="MainWindow"
+        WindowState="Maximized"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Topmost="True">
+
     <Grid>
         <ContentControl x:Name="MainContent" />
     </Grid>

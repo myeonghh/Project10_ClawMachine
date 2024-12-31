@@ -11,14 +11,30 @@
   <ItemGroup>
     <None Remove="View\Resource\back.png" />
     <None Remove="View\Resource\Claw Machine.jpg" />
+    <None Remove="View\Resource\down.png" />
     <None Remove="View\Resource\join.jpg" />
     <None Remove="View\Resource\joinpage.jpg" />
+    <None Remove="View\Resource\left.png" />
     <None Remove="View\Resource\login.png" />
     <None Remove="View\Resource\logout.png" />
     <None Remove="View\Resource\mainmenu.jpg" />
     <None Remove="View\Resource\play.jpg" />
+    <None Remove="View\Resource\press_down.png" />
+    <None Remove="View\Resource\press_left.png" />
+    <None Remove="View\Resource\press_right.png" />
+    <None Remove="View\Resource\press_up.png" />
+    <None Remove="View\Resource\right.png" />
     <None Remove="View\Resource\signup.png" />
     <None Remove="View\Resource\start.gif" />
+    <None Remove="View\Resource\up.png" />
+    <None Remove="View\Resource\네모버튼.png" />
+    <None Remove="View\Resource\누른네모버튼.png" />
+    <None Remove="View\Resource\누른동그라미버튼.png" />
+    <None Remove="View\Resource\누른세모버튼.png" />
+    <None Remove="View\Resource\누른엑스버튼.png" />
+    <None Remove="View\Resource\동그라미버튼.png" />
+    <None Remove="View\Resource\세모버튼.png" />
+    <None Remove="View\Resource\엑스버튼.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,14 +45,30 @@
   <ItemGroup>
     <Resource Include="View\Resource\back.png" />
     <Resource Include="View\Resource\Claw Machine.jpg" />
+    <Resource Include="View\Resource\down.png" />
     <Resource Include="View\Resource\join.jpg" />
     <Resource Include="View\Resource\joinpage.jpg" />
+    <Resource Include="View\Resource\left.png" />
     <Resource Include="View\Resource\login.png" />
     <Resource Include="View\Resource\logout.png" />
     <Resource Include="View\Resource\mainmenu.jpg" />
     <Resource Include="View\Resource\play.jpg" />
+    <Resource Include="View\Resource\press_down.png" />
+    <Resource Include="View\Resource\press_left.png" />
+    <Resource Include="View\Resource\press_right.png" />
+    <Resource Include="View\Resource\press_up.png" />
+    <Resource Include="View\Resource\right.png" />
     <Resource Include="View\Resource\signup.png" />
     <Resource Include="View\Resource\start.gif" />
+    <Resource Include="View\Resource\up.png" />
+    <Resource Include="View\Resource\네모버튼.png" />
+    <Resource Include="View\Resource\누른네모버튼.png" />
+    <Resource Include="View\Resource\누른동그라미버튼.png" />
+    <Resource Include="View\Resource\누른세모버튼.png" />
+    <Resource Include="View\Resource\누른엑스버튼.png" />
+    <Resource Include="View\Resource\동그라미버튼.png" />
+    <Resource Include="View\Resource\세모버튼.png" />
+    <Resource Include="View\Resource\엑스버튼.png" />
   </ItemGroup>
 
 </Project>

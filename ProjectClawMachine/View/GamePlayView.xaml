@@ -6,34 +6,210 @@
         xmlns:local="clr-namespace:ProjectClawMachine.View"
         mc:Ignorable="d"
         d:DesignHeight="1080" d:DesignWidth="1920">
+
+
+    <UserControl.Resources>
+        <Style x:Key="RoundedButtonStyle3" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="10" 
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                              Content="{TemplateBinding Content}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Height" Value="35"/>
+        </Style>
+
+        <Style x:Key="NoFocus" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="63.5" 
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="#fce9e0" />
+            <Setter Property="BorderThickness" Value="4" />
+            <Setter Property="BorderBrush" Value="#fdc6db"/>
+        </Style>
+
+        <Style x:Key="NoFocus2" TargetType="Button">
+            <!-- 기본 시각적 스타일 제거 -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <!-- 포커스 시각적 효과 제거 -->
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="5" />
+        </Style>
+
+    </UserControl.Resources>
+
+
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="Resource/play.jpg" Stretch="Fill"/>
         </Grid.Background>
         <!-- 실시간 웹캠 이미지 -->
-        <Image Source="{Binding CameraView}" Stretch="Fill" Width="733" HorizontalAlignment="Left" Margin="609,275,0,304"/>
+        <Image Source="{Binding CameraView}" Stretch="Fill" Width="718" HorizontalAlignment="Left" Margin="609,275,0,308"/>
 
         <!-- 버튼 컨트롤 -->
-        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0" Orientation="Vertical">
-            <Button Content="↑" Width="60" Height="60" Margin="0,10" Command="{Binding MoveBehindCommand}" Focusable="False"/>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,504,1403,0" Orientation="Vertical">
+
+            <Button Width="36" x:Name="BtnBehind"
+                Height="47"
+                Margin="0,-5"
+                BorderThickness="0"
+                Cursor="Hand"
+                Focusable="False"  Style="{StaticResource NoFocus2}"
+                Command="{Binding MoveBehindCommand}">
+                <Button.Background>
+                    <ImageBrush x:Name="Imgbehind" ImageSource="pack://application:,,,/View/Resource/up.png" Stretch="Fill"/>
+                </Button.Background>
+            </Button>
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Content="←" Width="60" Height="60" Margin="10,0" Command="{Binding MoveRightCommand}" Focusable="False"/>
-                <Button Content="→" Width="60" Height="60" Margin="10,0" Command="{Binding MoveLeftCommand}" Focusable="False"/>
+
+                <Button Width="47" x:Name="BtnFront"
+                        Height="36"
+                        Margin="13,0"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Focusable="False"  Style="{StaticResource NoFocus2}"
+                        Command="{Binding MoveRightCommand}">
+                    <Button.Background>
+                        <ImageBrush x:Name="Imgleft" ImageSource="pack://application:,,,/View/Resource/left.png" Stretch="Fill"/>
+                    </Button.Background>
+                </Button>
+
+                <Button Width="47"  x:Name="BtnLeft"
+                        Height="36"
+                        Margin="13,0"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Focusable="False"  Style="{StaticResource NoFocus2}"
+                        Command="{Binding MoveLeftCommand}">
+                    <Button.Background>
+                        <ImageBrush x:Name="ImgRight" ImageSource="pack://application:,,,/View/Resource/right.png" Stretch="Fill"/>
+                    </Button.Background>
+                </Button>
+
             </StackPanel>
-            <Button Content="↓" Width="60" Height="60" Margin="0,10" Command="{Binding MoveFrontCommand}" Focusable="False"/>
-            <Button Content="뽑기" Width="100" Height="50" Margin="0,20" Command="{Binding GrabCommand}" Focusable="False"/>
+
+            <Button Width="36"  x:Name="BtnRight"
+                Height="47"
+                Margin="0,-5"
+                BorderThickness="0"
+                Cursor="Hand"
+                Focusable="False"  Style="{StaticResource NoFocus2}"
+                Command="{Binding MoveFrontCommand}">
+                <Button.Background>
+                    <ImageBrush x:Name="ImgFront" ImageSource="pack://application:,,,/View/Resource/down.png" Stretch="Fill"/>
+                </Button.Background>
+            </Button>
+
         </StackPanel>
 
-        <!-- 우상단 "그만하기" 버튼 -->
-        <Button Content="그만하기"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Margin="0,20,20,0"
-                Width="100"
-                Height="30"
-                Command="{Binding ExitGameCommand}"
-                Focusable="False"/>
-        <Button Content="Up" Command="{Binding MoveUpCommand}" HorizontalAlignment="Left" Margin="1740,293,0,0" VerticalAlignment="Top" Height="53" Width="60" RenderTransformOrigin="0.367,0.415"/>
-        <Button Content="Down" Command="{Binding MoveDownCommand}" HorizontalAlignment="Left" Margin="1820,293,0,0" VerticalAlignment="Top" Height="53" Width="60" RenderTransformOrigin="0.367,0.415"/>
+
+
+        <Button Width="54"
+                Height="54"
+                Margin="1463,313,403,713"
+                BorderThickness="0"
+                Cursor="Hand"
+                Focusable="False"  Style="{StaticResource NoFocus2}"
+                Command="{Binding MoveUpCommand}">
+            <Button.Background>
+                <ImageBrush ImageSource="pack://application:,,,/View/Resource/세모버튼.png" Stretch="Fill"/>
+            </Button.Background>
+        </Button>
+
+        <Button Width="54"
+                Height="54"
+                Margin="1414,362,452,664"
+                BorderThickness="0"
+                Cursor="Hand"
+                Focusable="False"  Style="{StaticResource NoFocus2}"
+                Command="{Binding MoveDownCommand}">
+            <Button.Background>
+                <ImageBrush ImageSource="pack://application:,,,/View/Resource/네모버튼.png" Stretch="Fill"/>
+            </Button.Background>
+        </Button>
+
+        <Button Width="54"
+                Height="54"
+                Margin="1463,412,403,614"
+                BorderThickness="0"
+                Cursor="Hand"
+                Focusable="False"  Style="{StaticResource NoFocus2}">
+            <Button.Background>
+                <ImageBrush ImageSource="pack://application:,,,/View/Resource/엑스버튼.png" Stretch="Fill"/>
+            </Button.Background>
+        </Button>
+
+        <Button Width="54"
+                Height="54"
+                Margin="1514,361,352,665"
+                BorderThickness="0"
+                Cursor="Hand"
+                Focusable="False"  Style="{StaticResource NoFocus2}">
+            <Button.Background>
+                <ImageBrush ImageSource="pack://application:,,,/View/Resource/동그라미버튼.png" Stretch="Fill"/>
+            </Button.Background>
+        </Button>
+
+        
+        <!-- 오른쪽 최상단 뒤로가기 버튼 -->
+        <Button HorizontalAlignment="Right"
+        VerticalAlignment="Top"
+        Margin="0,20,20,0"
+        Width="200"
+        Height="60"
+        Cursor="Hand"
+        Focusable="False"
+        Command="{Binding ExitGameCommand}" >
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border BorderThickness="0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/View/Resource/back.png" Stretch="Fill"/>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+
+        <Button Height="127" Width="127" Margin="1427,508,366,445" Command="{Binding GrabCommand}" Focusable="False" Style="{StaticResource NoFocus}"/>
     </Grid>
 </UserControl>

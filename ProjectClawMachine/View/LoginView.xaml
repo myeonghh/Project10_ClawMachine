@@ -6,6 +6,29 @@
              mc:Ignorable="d"
              d:DesignHeight="1080" d:DesignWidth="1920">
 
+
+    <UserControl.Resources>
+
+        <Style x:Key="NoFocus" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Focusable" Value="False" />
+        </Style>
+
+    </UserControl.Resources>
+
+
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="Resource/join.jpg" Stretch="Fill"/>
@@ -38,15 +61,18 @@
                 Width="900">
             <TextBox x:Name="UsernameTextBox"
                  Height="60"
-                 FontSize="14"
+                 FontSize="30"
                  Margin="0,70,100,70"
-                 Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                 />
+                 Padding="10,0"
+                 VerticalContentAlignment="Center"
+                 Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
 
             <PasswordBox x:Name="PasswordBox"
                      Height="60"
-                     FontSize="14"
-                         Margin="0,0,100,0"
+                     FontSize="30"
+                     Margin="0,0,100,0"
+                     Padding="10,0"
+                     VerticalContentAlignment="Center"
                      PasswordChanged="OnPasswordChanged"/>
         </StackPanel>
 
@@ -55,7 +81,8 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-            <Button Width="324"
+
+            <Button Width="324" Style="{StaticResource NoFocus}"
                 Height="72.1"
                 BorderThickness="0"
                 Cursor="Hand"
@@ -66,7 +93,7 @@
                 </Button.Background>
             </Button>
 
-            <Button Width="324"
+            <Button Width="324" Style="{StaticResource NoFocus}"
                 Height="72.1"
                 BorderThickness="0"
                 Cursor="Hand"
